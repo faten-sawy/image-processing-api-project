@@ -1,0 +1,39 @@
+{
+  "name": "image-processing-api-project",
+  "version": "1.0.0",
+  "description": "Image Processing API project",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.ts",
+    "build": "npx tsc",
+    "jasmine": "jasmine",
+    "test": "npm run build && npm run jasmine",
+    "lint": "eslint --config .eslintrc 'src/**/*.ts'",
+    "lint-and-fix": "eslint --config .eslintrc 'src/**/*.ts' --fix",
+    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
+  },
+  "keywords": [],
+  "author": "Mark de Leon",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/jasmine": "^3.8.2",
+    "@types/node": "^16.6.1",
+    "@types/supertest": "^2.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2",
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "jasmine": "^3.8.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "supertest": "^6.1.5"
+  }
+}
