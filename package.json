@@ -8,6 +8,7 @@
     "build": "npx tsc",
     "jasmine": "jasmine",
     "test": "npm run build && npm run jasmine",
+    "formatter": "npm run prettier && npm run lint",
     "lint": "eslint --config .eslintrc 'src/**/*.ts'",
     "lint-and-fix": "eslint --config .eslintrc 'src/**/*.ts' --fix",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
