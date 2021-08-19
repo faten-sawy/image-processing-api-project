@@ -9,11 +9,19 @@ import routes from './routes/index';
 //import the logger middleware
 import logger from './utilities/logger';
 
+// Path module
+import path from 'path';
+
 //create the application object
 const app = express();
 
 //set a port
 const port = 3000;
+
+//provide a front-end page that displays a thumbnail directory
+app.get('/', logger, (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 //add an API entry point, apply the router and logger as middleware
 app.use('/image', logger, routes);

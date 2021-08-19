@@ -5,6 +5,11 @@ import app from '../index';
 const request = supertest(app);
 
 describe('test image processor', () => {
+  it('checks front-end page', async () => {
+    const response = await request.get('/');
+    expect(response.status).toBe(200);
+  });
+
   // check for missing query parameters
   it('checks for missing query parameters', async () => {
     const response = await request.get('/image');
