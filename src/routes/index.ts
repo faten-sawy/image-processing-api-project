@@ -17,15 +17,21 @@ import {
 const routes = express.Router();
 
 // define the image resize route
-// e.g. http://localhost:3000/image?f=imageName&w=100&h=100
+// e.g. http://localhost:3000/image?f=imageName&x=jpeg&w=100&h=100
 routes.get('/', (req, res) => {
   const filename = req.query.f as string;
+  const extension = req.query.x as string;
   const width = req.query.w as string;
   const height = req.query.h as string;
 
   // check for valid request query parameters
   // if any one of these are not provided, image processor cannot proceed
-  if (filename === undefined || width === undefined || height === undefined) {
+  if (
+    filename === undefined ||
+    extension === undefined ||
+    width === undefined ||
+    height === undefined
+  ) {
     // invalid request query parameters
     res.status(400).send('Missing request query parameters');
   } else {
@@ -35,15 +41,26 @@ routes.get('/', (req, res) => {
     if (isNaN(w) || isNaN(h)) {
       res.status(400).send('Invalid request query parameters');
     } else {
-      //TODO: pass the file extension as a request query parameter
+      // pass the file extension as a request query parameter
+      const extensionLowercase = extension.toLowerCase();
       const assetResourceName =
-        path.join(__dirname, '../../assets/full/') + filename + '.jpeg';
+        path.join(__dirname, '../../assets/full/') +
+        filename +
+        '.' +
+        extensionLowercase;
       const thumbnailDirectory = path.join(
         __dirname,
         '../../assets/thumbnail/'
       );
       const thumbnailResourceName =
-        thumbnailDirectory + filename + '-' + width + 'w-' + height + 'h.jpeg';
+        thumbnailDirectory +
+        filename +
+        '-' +
+        width +
+        'w-' +
+        height +
+        'h.' +
+        extensionLowercase;
 
       // check if specified file exists in assets
       checkFileExists(assetResourceName).then((assetExists) => {
@@ -58,6 +75,7 @@ routes.get('/', (req, res) => {
             parseInt(height),
             thumbnailResourceName
           ).then((outputFileName) => {
+            console.log('file returned: ' + outputFileName);
             res.status(200).sendFile(outputFileName);
           });
         } else {
