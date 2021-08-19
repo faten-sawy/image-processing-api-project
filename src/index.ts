@@ -16,7 +16,7 @@ const app = express();
 const port = 3000;
 
 //add an API entry point, apply the router and logger as middleware
-app.use('/api', logger, routes);
+app.use('/image', logger, routes);
 
 //listen to port and output message to console
 app.listen(port, () => {

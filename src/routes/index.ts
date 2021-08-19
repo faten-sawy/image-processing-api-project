@@ -7,19 +7,18 @@ import express from 'express';
 import path from 'path';
 
 // Image file utilities module
-import { checkFileExists, readFileContents } from '../utilities/imageFile';
+import {
+  checkFileExists,
+  insistDirectoryExists,
+  resizeFile
+} from '../utilities/imageFile';
 
 // create the Router object
 const routes = express.Router();
 
-// define the main API endpoint
-routes.get('/', (req, res) => {
-  res.status(200).send('main API route');
-});
-
 // define the image resize route
-// e.g. http://localhost:3000/api/image?f=imageName&w=100&h=100
-routes.get('/image', (req, res) => {
+// e.g. http://localhost:3000/image?f=imageName&w=100&h=100
+routes.get('/', (req, res) => {
   const filename = req.query.f as string;
   const width = req.query.w as string;
   const height = req.query.h as string;
@@ -36,32 +35,30 @@ routes.get('/image', (req, res) => {
     if (isNaN(w) || isNaN(h)) {
       res.status(400).send('Invalid request query parameters');
     } else {
-      const assetsDir = path.join(__dirname, '../../assets/full/');
-      const thumbsDir = path.join(__dirname, '../../assets/thumbnail/');
-
       //TODO: pass the file extension as a request query parameter
-      const assetFileName = assetsDir + filename + '.jpeg';
+      const assetResourceName =
+        path.join(__dirname, '../../assets/full/') + filename + '.jpeg';
+      const thumbnailDirectory = path.join(
+        __dirname,
+        '../../assets/thumbnail/'
+      );
+      const thumbnailResourceName =
+        thumbnailDirectory + filename + '-' + width + 'w-' + height + 'h.jpeg';
 
       // check if specified file exists in assets
-      checkFileExists(assetFileName).then((assetExists) => {
+      checkFileExists(assetResourceName).then((assetExists) => {
         if (assetExists) {
-          // check if thumbnail already exists for given filename and dimensions
-          const thumbnailFileName =
-            thumbsDir + filename + '-' + width + 'w-' + height + 'h.jpeg';
-          console.log('thumbnailFileName=' + thumbnailFileName);
-          checkFileExists(thumbnailFileName).then((thumbnailExists) => {
-            if (thumbnailExists) {
-              // TODO: return existing thumbnail
+          // check if thumbnail directory exists; create if it doesn't
+          insistDirectoryExists(thumbnailDirectory);
 
-              res.status(200).send('TODO:  return existing thumbnail');
-            } else {
-              // open asset image file contents
-
-              // TODO: use Sharp module to resize asset image to specified dimensions and save as thumbnail
-
-              // TODO: return saved thumbnail
-              res.status(200).sendFile(assetFileName);
-            }
+          // resize asset image to specified dimensions and save as thumbnail
+          resizeFile(
+            assetResourceName,
+            parseInt(width),
+            parseInt(height),
+            thumbnailResourceName
+          ).then((outputFileName) => {
+            res.status(200).sendFile(outputFileName);
           });
         } else {
           // unknown filename resource
