@@ -19,9 +19,13 @@ const app = express();
 const port = 3000;
 
 //provide a front-end page that displays a thumbnail directory
-app.get('/', logger, (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
-});
+app.get(
+  '/',
+  logger,
+  async (req: express.Request, res: express.Response): Promise<void> => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+  }
+);
 
 //add an API entry point, apply the router and logger as middleware
 app.use('/image', logger, routes);

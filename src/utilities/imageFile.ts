@@ -24,6 +24,7 @@ const insistDirectoryExists = async (
   } catch {
     await fsPromises.mkdir(directoryResourceName);
   }
+  return Promise.resolve();
 };
 
 // asynchronous function to resize image file to specified dimensions and save as thumbnail
